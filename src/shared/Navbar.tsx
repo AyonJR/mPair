@@ -1,32 +1,44 @@
-"use client"
+"use client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 
 const Navbar = () => {
   const session = useSession();
-  console.log(session);
 
   return (
-    <div className="w-full h-[70px]">
-      {/* Navbar container */}
-      <div className="h-full w-full bg-primaryBg flex justify-between items-center px-6">
-        {/* Left Side: Logo */}
-        <div className="flex-shrink-0">
-          <Image
-            src="https://i.ibb.co/vQ60kVG/Pure-Ledger-1.png"
-            height={50}
-            width={72}
-            alt="Pure Ledger Logo"
-          />
-        </div>
+    <div className="w-full h-[70px] bg-primaryBg">
+      {/* Navbar Content Wrapper */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          height: "70px",
+          padding: "0 20px",
+          backgroundColor: "#2397C8",
+        }}
+      >
+        {/* Logo */}
+        <Image
+          src="https://i.ibb.co/vQ60kVG/Pure-Ledger-1.png"
+          height={30}
+          width={72}
+          alt="Pure Ledger Logo"
+        />
 
-        {/* Right Side: Login Button */}
-        <div className="ml-auto flex-shrink-0">
-          <button className="bg-primaryBg text-white py-2 px-4 rounded-sm hover:bg-opacity-80">
-            Login
-          </button>
-        </div>
+        {/* Button */}
+        <button
+          style={{
+            backgroundColor: "#2397C8",
+            color: "#fff",
+            padding: "8px 22px",
+            border: "1px solid white",
+            borderRadius: "4px",
+          }}
+        >
+          Login
+        </button>
       </div>
     </div>
   );

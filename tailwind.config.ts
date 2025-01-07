@@ -11,6 +11,12 @@ export default {
       colors: {
       
         primaryBg: "#2397C8",
+        customRed: "#F6DBDB",
+        customGreen: "#E0F6DB",
+        customYellow: "#F6EBDB",
+        customRedText: "#FF5F5F",
+        customGreenText: "#21DF10",
+        customYellowText: "#E49700",
       },
     },
   },
