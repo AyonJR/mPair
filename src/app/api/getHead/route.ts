@@ -6,8 +6,21 @@ export const GET = async (request: Request) => {
     const db = await connectDb();
     const headCollection = db.collection("head");
 
-    // Fetch all account heads
-    const accountHeads = await headCollection.find().toArray();
+    // Get the email from query or headers (pass the email from the client)
+    const url = new URL(request.url);
+    const email = url.searchParams.get("email");
+
+    if (!email) {
+      return new Response(
+        JSON.stringify({ message: "Email is required to fetch account heads" }),
+        { status: 400 }
+      );
+    }
+
+    // Fetch account heads based on email
+    const accountHeads = await headCollection
+      .find({ email })  // Filter by email
+      .toArray();
 
     return new Response(
       JSON.stringify({ accountHeads }),

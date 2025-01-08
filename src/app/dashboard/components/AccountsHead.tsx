@@ -64,10 +64,17 @@ const AccountsHead = () => {
     }
   };
 
-   // Fetch account heads from the database when the component mounts
-   const fetchAccountHeads = async () => {
+  // Fetch account heads from the database when the component mounts
+  const fetchAccountHeads = async () => {
     try {
-      const response = await fetch("/api/getHead");
+      const userEmail = session?.data?.user?.email;
+  
+      if (!userEmail) {
+        console.error("User email not found.");
+        return;
+      }
+  
+      const response = await fetch(`/api/getHead?email=${userEmail}`);
       if (response.ok) {
         const result = await response.json();
         setAccountHeads(result.accountHeads); // Store the fetched account heads in the state
@@ -78,7 +85,7 @@ const AccountsHead = () => {
       console.error("Error fetching account heads:", error);
     }
   };
-
+  
   useEffect(() => {
     fetchAccountHeads(); // Call the function to fetch account heads when the component mounts
   }, []);
