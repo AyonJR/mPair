@@ -21,7 +21,7 @@ const RegisterForm = () => {
     try {
       // Post data using axios
       const response = await axios.post(
-        "http://localhost:3001/register/api",
+        "http://localhost:3000/register/api",
         newUser,
         {
           headers: {

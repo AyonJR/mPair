@@ -7,13 +7,11 @@ export const POST = async (request) => {
     const db = await connectDb(); // Connect to DB
     const userCollection = db.collection("user"); // Access collection
 
-    // Check if the user already exists
     const exist = await userCollection.findOne({ email: newUser.email });
     if (exist) {
       return Response.json({ message: "User already exists" }, { status: 400 });
     }
 
-    // Insert new user
     const res = await userCollection.insertOne(newUser);
     return Response.json(
       { message: "User created", userId: res.insertedId },

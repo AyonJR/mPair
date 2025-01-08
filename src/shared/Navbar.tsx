@@ -1,10 +1,11 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 
 const Navbar = () => {
-  const session = useSession();
+  const { data: session } = useSession(); // Get session data
 
   return (
     <div className="w-full h-[70px] bg-primaryBg">
@@ -15,7 +16,7 @@ const Navbar = () => {
           justifyContent: "space-between",
           alignItems: "center",
           height: "70px",
-          padding: "0 20px",
+          padding: "0 40px",
           backgroundColor: "#2397C8",
         }}
       >
@@ -27,18 +28,33 @@ const Navbar = () => {
           alt="Pure Ledger Logo"
         />
 
-        {/* Button */}
-        <button
-          style={{
-            backgroundColor: "#2397C8",
-            color: "#fff",
-            padding: "8px 22px",
-            border: "1px solid white",
-            borderRadius: "4px",
-          }}
-        >
-          Login
-        </button>
+        {/* Conditional Rendering */}
+        {session ? (
+          <div className="relative">
+            {/* Profile Image */}
+            <Image
+              src="https://i.ibb.co/thgH3p8/Ellipse-20.png"
+              height={40}
+              width={40}
+              alt="User Profile"
+              className="cursor-pointer rounded-full"
+            />
+          </div>
+        ) : (
+          <Link href={"/"}>
+            <button
+              style={{
+                backgroundColor: "#2397C8",
+                color: "#fff",
+                padding: "8px 22px",
+                border: "1px solid white",
+                borderRadius: "4px",
+              }}
+            >
+              Login
+            </button>
+          </Link>
+        )}
       </div>
     </div>
   );

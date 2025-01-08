@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
+
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -14,13 +16,22 @@ const Login = () => {
     e.preventDefault();
     const empId = e.target.empId.value;
     const password = e.target.password.value;
+
     const response = await signIn("credentials", {
       empId,
       password,
-      redirect: false,
+      redirect: false, // Prevent automatic redirection by NextAuth
     });
 
     console.log(response);
+
+    if (response?.ok) {
+      // Redirect manually after successful login
+      window.location.href = "/dashboard";
+    } else {
+      // Handle login failure
+      alert("Invalid credentials. Please try again.");
+    }
   };
 
   return (
@@ -38,7 +49,7 @@ const Login = () => {
         {/* Form */}
         <form
           onSubmit={handleLogin}
-          className="flex flex-col  justify-start items-start"
+          className="flex flex-col justify-start items-start"
         >
           {/* Employer ID Field */}
           <div className="mb-4 w-full">
@@ -91,9 +102,11 @@ const Login = () => {
           <div className="flex justify-center items-center mt-7 w-full">
             <p className="text-[#9E9E9E]">
               Don't have an account?{" "}
-              <span className="text-primaryBg font-semibold">
-                Register Now!
-              </span>
+              <Link href="/register">
+                <span className="text-primaryBg font-semibold">
+                  Register Now!
+                </span>
+              </Link>
             </p>
           </div>
         </form>
