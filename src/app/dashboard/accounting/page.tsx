@@ -1,12 +1,15 @@
-"use client"
+"use client";
 import AccountsHead from "../components/AccountsHead";
 import AddAccounting from "../components/AddAccounting";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const AccountingPage = () => {
+  const router = useRouter();
+
   const handleProfileClick = () => {
-    alert("Navigate to My Profile Page"); // Replace with actual navigation logic
-  };
+    router.push("/dashboard/profile");
+};
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" }); // Redirect to home route after logout
@@ -44,7 +47,7 @@ const AccountingPage = () => {
               {/* My Profile Button */}
               <button
                 onClick={handleProfileClick}
-                className=" text-primaryBg font-semibold text-sm px-3 py-1 rounded "
+                className="text-primaryBg font-semibold text-sm px-3 py-1 rounded"
               >
                 My Profile
               </button>
