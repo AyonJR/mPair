@@ -28,6 +28,12 @@ const DashboardPage = () => {
       subtitle: "This month",
     },
   ]);
+  const monthlyData = [
+    { month: "January", debit: 5000, credit: 3000 },
+    { month: "February", debit: 4000, credit: 2000 },
+    // Remaining months...
+  ];
+  const [yearlyData, setYearlyData] = useState([]);
 
   const fetchAccountingData = async () => {
     try {
@@ -43,15 +49,17 @@ const DashboardPage = () => {
       if (response.ok) {
         const data = await response.json();
 
-        // Check if accountingEntries exist and are an array
-        if (!data?.accountingEntries || !Array.isArray(data.accountingEntries)) {
+        if (
+          !data?.accountingEntries ||
+          !Array.isArray(data.accountingEntries)
+        ) {
           console.error("Invalid data format received");
           return;
         }
 
         const accountingData = data.accountingEntries;
 
-        // Calculate the total debit and credit only if data is valid
+        // Calculate monthly totals for the cards
         const totalDebit = accountingData
           .filter((item) => item.accountType === "debit")
           .reduce((sum, item) => sum + item.amount, 0);
@@ -62,23 +70,33 @@ const DashboardPage = () => {
 
         const totalSavings = totalDebit - totalCredit;
 
-        // Update the cards with calculated values
         const updatedCards = [
-          {
-            ...cards[0],
-            amount: `${totalDebit} TK`, // Total Debit
-          },
-          {
-            ...cards[1],
-            amount: `${totalCredit} TK`, // Total Credit
-          },
-          {
-            ...cards[2],
-            amount: `${totalSavings} TK`, // Total Savings (Debit - Credit)
-          },
+          { ...cards[0], amount: `${totalDebit} TK` },
+          { ...cards[1], amount: `${totalCredit} TK` },
+          { ...cards[2], amount: `${totalSavings} TK` },
         ];
-
         setCards(updatedCards);
+
+        // Prepare yearly analysis data
+        const yearlyData = accountingData.reduce((acc, entry) => {
+          const year = new Date(entry.date).getFullYear();
+          if (!acc[year]) {
+            acc[year] = { debit: 0, credit: 0 };
+          }
+          acc[year][entry.accountType] += entry.amount;
+          return acc;
+        }, {});
+
+        // Convert yearlyData object to an array for easier chart rendering
+        const yearlyDataArray = Object.entries(yearlyData).map(
+          ([year, { debit, credit }]) => ({
+            year,
+            debit,
+            credit,
+          })
+        );
+
+        setYearlyData(yearlyDataArray);
       } else {
         console.error("Failed to fetch accounting data");
       }
@@ -124,8 +142,10 @@ const DashboardPage = () => {
       </div>
 
       {/* Yearly Account Analysis Component */}
-      <div>
-        <YearlyAccountAnalysis />
+      <div className="bg-[#F6F6F6]">
+        <div className=" max-w-[1200px] mx-auto container">
+          <YearlyAccountAnalysis monthlyData={monthlyData} />
+        </div>
       </div>
     </div>
   );

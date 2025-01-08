@@ -2,58 +2,52 @@
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect} from "react";
 
 const Navbar = () => {
-    const { status, data: session } = useSession();
-    const router = useRouter();
-    const [userData, setUserData] = useState(null);
-  
-    const fetchAccountHeads = async () => {
-      try {
-        const userEmail = session?.user?.email;
-        console.log("User Email:", userEmail);
-  
-        if (!userEmail) {
-          console.error("User email not found.");
-          return;
-        }
-  
-        const response = await fetch(`/api/getUser?email=${userEmail}`);
-        console.log("API Response Status:", response.status);
-  
-        if (response.ok) {
-          const result = await response.json();
-          console.log("API Response Data:", result);
-          setUserData(result || {});
-        } else {
-          console.error("Failed to fetch account heads");
-        }
-      } catch (error) {
-        console.error("Error fetching account heads:", error);
+  const { status, data: session } = useSession();
+  const router = useRouter();
+  const [userData, setUserData] = useState(null);
+
+  const fetchAccountHeads = async () => {
+    try {
+      const userEmail = session?.user?.email;
+      if (!userEmail) {
+        console.error("User email not found.");
+        return;
       }
-    };
-  
-    useEffect(() => {
-      if (status === "authenticated") {
-        fetchAccountHeads();
+
+      const response = await fetch(`/api/getUser?email=${userEmail}`);
+      if (response.ok) {
+        const result = await response.json();
+        setUserData(result || {});
+      } else {
+        console.error("Failed to fetch account heads");
       }
-    }, [status]);
-  
-    if (status === "loading") {
-      return <p>Loading...</p>;
+    } catch (error) {
+      console.error("Error fetching account heads:", error);
     }
-  
+  };
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchAccountHeads();
+    }
+  }, [status]);
+
+  useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/");
-      return null;
     }
+  }, [status, router]); // Ensure the dependency array includes `router`
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="w-full h-[70px] bg-primaryBg">
-      {/* Navbar Content Wrapper */}
       <div
         style={{
           display: "flex",
@@ -64,7 +58,6 @@ const Navbar = () => {
           backgroundColor: "#2397C8",
         }}
       >
-        {/* Logo */}
         <Image
           src="https://i.ibb.co/vQ60kVG/Pure-Ledger-1.png"
           height={30}
@@ -72,25 +65,23 @@ const Navbar = () => {
           alt="Pure Ledger Logo"
         />
 
-        {/* Conditional Rendering */}
         {session ? (
           <div className="relative">
-            {/* Profile Image */}
-           <div className="flex gap-2 items-center">
-            <div>
-              <p className="text-white font-medium">{userData?.fullName}</p>
-              <p className="text-white text-sm">{userData?.position}</p>
+            <div className="flex gap-2 items-center">
+              <div>
+                <p className="text-white font-medium">{userData?.fullName}</p>
+                <p className="text-white text-sm">{userData?.position}</p>
+              </div>
+              <div>
+                <Image
+                  src="https://i.ibb.co/thgH3p8/Ellipse-20.png"
+                  height={50}
+                  width={50}
+                  alt="User Profile"
+                  className="cursor-pointer rounded-full"
+                />
+              </div>
             </div>
-            <div>
-            <Image
-              src="https://i.ibb.co/thgH3p8/Ellipse-20.png"
-              height={50}
-              width={50}
-              alt="User Profile"
-              className="cursor-pointer rounded-full"
-            />
-            </div>
-           </div>
           </div>
         ) : (
           <Link href={"/"}>

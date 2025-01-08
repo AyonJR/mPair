@@ -2,8 +2,11 @@
 
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation"; // Import the router hook
 
 const RegisterForm = () => {
+  const router = useRouter(); // Initialize the router
+
   const handleSignup = async (event) => {
     event.preventDefault();
 
@@ -31,14 +34,23 @@ const RegisterForm = () => {
       );
 
       console.log("Response from server:", response.data);
+
+      // Show success notification
       toast.success("User registered successfully!", {
         position: "top-right",
       });
+
+      // Redirect to the home page after a short delay
+      setTimeout(() => {
+        router.push("/"); // Redirect to `/`
+      }, 1500); // Delay for user to see the notification
     } catch (error) {
       console.error(
         "Error registering user:",
         error.response?.data || error.message
       );
+
+      // Show error notification
       toast.error("Failed to register user.", {
         position: "top-right",
       });
@@ -83,7 +95,7 @@ const RegisterForm = () => {
               />
             </div>
           </div>
-          <div className="w-full">
+          <div className="w-full"> 
             <input
               type="email"
               id="email"
