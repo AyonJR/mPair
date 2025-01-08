@@ -101,10 +101,9 @@ const AddAccounting = () => {
               value={formData.accountType}
               onChange={handleChange}
             >
-              <option value="">Select Account Type</option>
-              <option value="expense">Expense</option>
-              <option value="income">Debit</option>
-              <option value="savings">Credit</option>
+              <option value="">Account Type</option>
+              <option value="debit">Debit</option>
+              <option value="credit">Credit</option>
             </select>
           </div>
 
@@ -116,7 +115,7 @@ const AddAccounting = () => {
               value={formData.head}
               onChange={handleChange}
             >
-              <option value="">Select a head</option>
+              <option value="">Choose Head</option>
               {Array.isArray(accountHeads) && accountHeads.length > 0 ? (
                 accountHeads.map((head) => (
                   <option key={head._id} value={head.name}>
@@ -135,7 +134,7 @@ const AddAccounting = () => {
               type="number"
               name="amount"
               className="w-[248px] mt-2 p-3 bg-white"
-              placeholder="Enter Amount"
+              placeholder="Amount"
               value={formData.amount}
               onChange={handleChange}
             />
